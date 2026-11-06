@@ -1,0 +1,21 @@
+fever,cough,headache,fatigue,vomiting,disease
+1,1,1,1,0,Flu
+1,1,0,1,0,Flu
+1,0,1,1,0,Flu
+1,1,1,0,0,Flu
+1,0,0,1,0,Flu
+0,1,0,1,0,Common Cold
+0,1,1,0,0,Common Cold
+0,1,0,0,0,Common Cold
+0,1,1,1,0,Common Cold
+0,1,0,1,1,Common Cold
+0,0,1,1,0,Migraine
+0,0,1,0,0,Migraine
+0,0,1,1,1,Migraine
+0,0,1,0,1,Migraine
+0,0,1,1,0,Migraine
+0,0,0,1,1,Stomach Infection
+1,0,0,0,1,Stomach Infection
+0,0,0,1,1,Stomach Infection
+1,0,0,1,1,Stomach Infection
+0,0,0,0,1,Stomach Infection

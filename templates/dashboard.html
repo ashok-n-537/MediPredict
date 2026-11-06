@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPredict | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="mp-app-page">
+    <header class="mp-app-header">
+        <a class="mp-brand" href="{{ url_for('home') }}">
+            <span class="mp-brand-icon">✚</span>
+            <span>Medi<span>Predict</span></span>
+        </a>
+        <nav class="mp-app-nav">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('home') }}#checker">Symptom Checker</a>
+            <a class="active" href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('history') }}">History</a>
+            <a class="mp-nav-logout" href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <main class="mp-page-container">
+        <section class="mp-page-intro">
+            <div>
+                <p class="mp-eyebrow">YOUR PERSONAL OVERVIEW</p>
+                <h1>Welcome back, {{ user_name }}.</h1>
+                <p>Review your prediction activity and explore your saved results.</p>
+            </div>
+            <a class="mp-action-primary" href="{{ url_for('home') }}#checker">＋ New prediction</a>
+        </section>
+
+        <section class="mp-stat-grid">
+            <article class="mp-stat-card">
+                <div class="mp-stat-icon">▤</div>
+                <p>Total predictions</p>
+                <strong>{{ total_predictions }}</strong>
+                <span>Saved in your account</span>
+            </article>
+            <article class="mp-stat-card">
+                <div class="mp-stat-icon">⌁</div>
+                <p>Prediction tracking</p>
+                <strong>Active</strong>
+                <span>Your activity is stored locally</span>
+            </article>
+            <article class="mp-stat-card">
+                <div class="mp-stat-icon">✚</div>
+                <p>Project status</p>
+                <strong>Prototype</strong>
+                <span>Educational ML demonstration</span>
+            </article>
+        </section>
+
+        <section class="mp-dashboard-grid">
+            <article class="mp-panel mp-chart-panel">
+                <div class="mp-panel-heading">
+                    <div>
+                        <p class="mp-section-kicker">ANALYTICS</p>
+                        <h2>Prediction overview</h2>
+                    </div>
+                    <span class="mp-panel-badge">By predicted condition</span>
+                </div>
+                {% if chart_labels %}
+                    <div class="mp-chart-wrap">
+             <canvas
+                id="predictionChart"
+                data-labels='{{ chart_labels | tojson | forceescape }}'
+                data-values='{{ chart_values | tojson | forceescape }}'>
+            </canvas>
+
+                    </div>
+                {% else %}
+                    <div class="mp-empty-state">
+                        <span>▥</span>
+                        <h3>No analytics yet</h3>
+                        <p>Your chart will appear after you make your first prediction.</p>
+                        <a href="{{ url_for('home') }}#checker">Try the symptom checker</a>
+                    </div>
+                {% endif %}
+            </article>
+
+            <aside class="mp-panel mp-shortcut-panel">
+                <p class="mp-section-kicker">QUICK ACTIONS</p>
+                <h2>What would you like to do?</h2>
+                <a class="mp-shortcut" href="{{ url_for('home') }}#checker">
+                    <span class="mp-shortcut-icon">＋</span>
+                    <span><strong>Check symptoms</strong><small>Start a new prediction</small></span>
+                    <b>→</b>
+                </a>
+                <a class="mp-shortcut" href="{{ url_for('history') }}">
+                    <span class="mp-shortcut-icon">▤</span>
+                    <span><strong>View history</strong><small>Review saved predictions</small></span>
+                    <b>→</b>
+                </a>
+                <div class="mp-note-card">
+                    <strong>Important note</strong>
+                    <p>MediPredict is an educational prototype. Results are not medical diagnoses.</p>
+                </div>
+            </aside>
+        </section>
+
+        <section class="mp-panel mp-recent-panel">
+            <div class="mp-panel-heading">
+                <div>
+                    <p class="mp-section-kicker">YOUR ACTIVITY</p>
+                    <h2>Recent predictions</h2>
+                </div>
+                <a class="mp-text-link" href="{{ url_for('history') }}">View full history →</a>
+            </div>
+            {% if recent_records %}
+            <div class="mp-table-scroll">
+                <table class="mp-data-table">
+                    <thead><tr><th>Symptoms selected</th><th>Predicted condition</th><th>Date</th></tr></thead>
+                    <tbody>
+                    {% for record in recent_records %}
+                        <tr>
+                            <td>{{ record.symptoms | join(', ') }}</td>
+                            <td><span class="mp-condition-pill">{{ record.predicted_disease }}</span></td>
+                            <td>{{ record.created_at }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="mp-empty-inline">No predictions saved yet. Start with the symptom checker.</div>
+            {% endif %}
+        </section>
+
+        <footer class="mp-app-footer">© MediPredict · Educational prototype only · Not a medical diagnosis.</footer>
+    </main>
+
+    {% if chart_labels %}
+<script>
+    const canvas = document.getElementById("predictionChart");
+
+    if (canvas) {
+        const labels = JSON.parse(canvas.dataset.labels);
+        const values = JSON.parse(canvas.dataset.values);
+
+        new Chart(canvas, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Predictions",
+                    data: values,
+                    backgroundColor: "#1497ac",
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+    
+    {% endif %}
+</body>
+</html>

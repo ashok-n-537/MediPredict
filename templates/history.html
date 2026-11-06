@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPredict | Prediction History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="mp-app-page">
+    <header class="mp-app-header">
+        <a class="mp-brand" href="{{ url_for('home') }}">
+            <span class="mp-brand-icon">✚</span>
+            <span>Medi<span>Predict</span></span>
+        </a>
+        <nav class="mp-app-nav">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('home') }}#checker">Symptom Checker</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a class="active" href="{{ url_for('history') }}">History</a>
+            <a class="mp-nav-logout" href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <main class="mp-page-container">
+        <section class="mp-page-intro">
+            <div>
+                <p class="mp-eyebrow">YOUR SAVED ACTIVITY</p>
+                <h1>Prediction history</h1>
+                <p>Welcome, {{ user_name }}. Review and manage your previous predictions.</p>
+            </div>
+            <div class="mp-intro-actions">
+                <a class="mp-action-secondary" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="mp-action-primary" href="{{ url_for('home') }}#checker">＋ New prediction</a>
+            </div>
+        </section>
+
+        <section class="mp-history-summary">
+            <article class="mp-stat-card">
+                <div class="mp-stat-icon">▤</div>
+                <p>Total saved predictions</p>
+                <strong>{{ records | length }}</strong>
+                <span>Prediction records in your account</span>
+            </article>
+            <article class="mp-history-tip">
+                <span>ⓘ</span>
+                <div><strong>Your activity, in one place</strong><p>Use search to find a symptom or predicted condition. You can remove an individual record at any time.</p></div>
+            </article>
+        </section>
+
+        <section class="mp-panel mp-history-panel">
+            <div class="mp-panel-heading mp-history-heading">
+                <div>
+                    <p class="mp-section-kicker">RECORDS</p>
+                    <h2>All predictions</h2>
+                </div>
+                {% if records %}
+                <label class="mp-history-search">
+                    <span>⌕</span>
+                    <input type="search" id="historySearch" placeholder="Search symptoms or condition..." aria-label="Search prediction history">
+                </label>
+                {% endif %}
+            </div>
+
+            {% if records %}
+            <div class="mp-table-scroll">
+                <table class="mp-data-table" id="historyTable">
+                    <thead>
+                        <tr><th>#</th><th>Symptoms selected</th><th>Predicted condition</th><th>Date</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                    {% for record in records %}
+                        <tr>
+                            <td class="mp-row-number">{{ loop.index }}</td>
+                            <td>
+                                <div class="mp-symptom-tags">
+                                    {% for symptom in record.symptoms %}
+                                        <span>{{ symptom|replace('_', ' ') }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td><span class="mp-condition-pill">{{ record.predicted_disease }}</span></td>
+                            <td class="mp-date-cell">{{ record.created_at }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('delete_prediction', prediction_id=record.id) }}" onsubmit="return confirm('Delete this prediction?');">
+                                    <button type="submit" class="mp-delete-btn">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <p class="mp-no-search-results" id="noSearchResults" hidden>No matching predictions found.</p>
+            </div>
+            {% else %}
+            <div class="mp-empty-state">
+                <span>▤</span>
+                <h3>No predictions yet</h3>
+                <p>Your prediction history will appear here after you use the symptom checker.</p>
+                <a class="mp-action-primary" href="{{ url_for('home') }}#checker">Check symptoms</a>
+            </div>
+            {% endif %}
+        </section>
+        <footer class="mp-app-footer">MediPredict is an educational prototype. Its predictions are not medical diagnoses.</footer>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById("historySearch");
+        const rows = document.querySelectorAll("#historyTable tbody tr");
+        const noResults = document.getElementById("noSearchResults");
+
+        if (searchInput) {
+            searchInput.addEventListener("input", function () {
+                const query = this.value.trim().toLowerCase();
+                let visibleCount = 0;
+
+                rows.forEach(function (row) {
+                    const matches = row.textContent.toLowerCase().includes(query);
+                    row.hidden = !matches;
+                    if (matches) visibleCount++;
+                });
+
+                if (noResults) noResults.hidden = visibleCount !== 0;
+            });
+        }
+    </script>
+</body>
+</html>

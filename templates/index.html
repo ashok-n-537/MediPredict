@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MediPredict | Intelligent Healthcare</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="mp-home">
+
+    <!-- NAVIGATION -->
+    <header class="mp-header">
+
+        <a href="#home" class="mp-brand">
+            <span class="mp-brand-icon">✚</span>
+            <span>Medi<span>Predict</span></span>
+        </a>
+
+        <nav class="mp-nav">
+
+            <a href="#home">Home</a>
+            <a href="#checker">Symptom Checker</a>
+            <a href="#about">About</a>
+
+            {% if session.get('user_id') %}
+
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('history') }}">History</a>
+                <a href="{{ url_for('logout') }}" class="mp-nav-login">
+                    Logout
+                </a>
+
+            {% else %}
+
+                <a href="{{ url_for('login') }}">Login</a>
+
+                <a href="{{ url_for('register') }}"
+                   class="mp-nav-login">
+                    Get Started
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+    <!-- HERO SECTION -->
+    <main>
+
+        <section class="mp-hero" id="home">
+
+            <div class="mp-hero-content">
+
+                <div class="mp-eyebrow">
+                    <span class="mp-live-dot"></span>
+                    AI-POWERED HEALTH INFORMATION
+                </div>
+
+                <h1>
+                    Better health insights.
+                    <span>Powered by AI.</span>
+                </h1>
+
+                <p>
+                    Explore how machine learning can identify
+                    patterns in selected symptoms and generate
+                    preliminary health information.
+                </p>
+
+                <div class="mp-hero-actions">
+
+                    <a href="#checker" class="mp-primary-btn">
+                        Explore Symptom Checker
+                        <span>→</span>
+                    </a>
+
+                    <a href="#about" class="mp-secondary-btn">
+                        Learn More
+                    </a>
+
+                </div>
+
+                <div class="mp-hero-note">
+                    <span>✓</span>
+                    Educational machine learning demonstration
+                </div>
+
+            </div>
+
+
+            <!-- HERO VISUAL -->
+            <div class="mp-hero-visual">
+
+                <div class="mp-visual-glow"></div>
+
+                <div class="mp-health-card">
+
+                    <div class="mp-health-card-top">
+                        <div>
+                            <span class="mp-small-label">
+                                MEDIPREDICT
+                            </span>
+
+                            <h3>Health insights</h3>
+                        </div>
+
+                        <span class="mp-health-icon">✚</span>
+                    </div>
+
+
+                    <div class="mp-heart-visual">
+                        <div class="mp-heart-circle">
+                            <span>✚</span>
+                        </div>
+                    </div>
+
+
+                    <div class="mp-visual-message">
+                        <strong>Understand symptom patterns</strong>
+
+                        <p>
+                            Explore a machine-learning
+                            based prediction workflow.
+                        </p>
+                    </div>
+
+
+                    <div class="mp-visual-bottom">
+
+                        <div>
+                            <strong>377</strong>
+                            <span>Symptoms</span>
+                        </div>
+
+                        <div>
+                            <strong>100</strong>
+                            <span>Categories</span>
+                        </div>
+
+                        <div>
+                            <strong>AI</strong>
+                            <span>Technology</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="mp-floating-card">
+                    <span class="mp-floating-icon">⌕</span>
+
+                    <div>
+                        <strong>Smart symptom search</strong>
+                        <p>Find symptoms easily</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECT HIGHLIGHTS -->
+        <section class="mp-highlights">
+
+            <div class="mp-highlight">
+                <span>01</span>
+                <div>
+                    <strong>Explore symptoms</strong>
+                    <p>Search and select symptoms</p>
+                </div>
+            </div>
+
+            <div class="mp-highlight">
+                <span>02</span>
+                <div>
+                    <strong>Machine learning</strong>
+                    <p>Analyze symptom patterns</p>
+                </div>
+            </div>
+
+            <div class="mp-highlight">
+                <span>03</span>
+                <div>
+                    <strong>View results</strong>
+                    <p>Explore model predictions</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- SYMPTOM CHECKER -->
+        <section class="mp-checker-section" id="checker">
+
+            <div class="mp-section-heading">
+
+                <span class="mp-section-tag">
+                    PERSONALIZED EXPLORATION
+                </span>
+
+                <h2>
+                    Start with your
+                    <span>symptoms.</span>
+                </h2>
+
+                <p>
+                    Select the symptoms you want to analyze.
+                    You can search from the available symptom list.
+                </p>
+
+            </div>
+
+
+            <div class="mp-checker-card">
+
+                <div class="mp-checker-header">
+
+                    <div>
+                        <div class="mp-step-label">
+                            <span>01</span>
+                            SYMPTOM SELECTION
+                        </div>
+
+                        <h3>What symptoms are you experiencing?</h3>
+
+                        <p>
+                            Select one or more symptoms from the list.
+                        </p>
+                    </div>
+
+                    <div class="mp-symptom-total">
+                        <strong>{{ symptoms|length }}</strong>
+                        <span>Available symptoms</span>
+                    </div>
+
+                </div>
+
+
+                <form id="symptomForm">
+
+                    <!-- SEARCH -->
+                    <div class="mp-search-wrapper">
+
+                        <span class="mp-search-icon">⌕</span>
+
+                        <input
+                            type="text"
+                            id="symptomSearch"
+                            placeholder="Search symptoms, e.g. fever..."
+                            autocomplete="off"
+                        >
+
+                        <span class="mp-search-hint">
+                            SEARCH
+                        </span>
+
+                    </div>
+
+
+                    <!-- SELECTED COUNT -->
+                    <div class="mp-selection-bar">
+
+                        <div>
+                            <span class="mp-selection-dot"></span>
+
+                            <strong id="count">
+                                0 symptoms selected
+                            </strong>
+                        </div>
+
+                        <span>
+                            Choose all applicable symptoms
+                        </span>
+
+                    </div>
+
+
+                    <!-- SYMPTOM GRID -->
+                    <div class="symptom-grid mp-symptom-grid"
+                         id="symptomGrid">
+
+                        {% for symptom in symptoms %}
+
+                        <label class="symptom-card mp-symptom-card">
+
+                            <input
+                                type="checkbox"
+                                name="symptoms"
+                                value="{{ symptom }}"
+                            >
+
+                            <span class="mp-checkbox"></span>
+
+                            <span class="mp-symptom-name">
+                                {{ symptom|replace('_', ' ')|title }}
+                            </span>
+
+                        </label>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div id="noSymptoms" class="mp-no-symptoms"
+                         style="display:none;">
+
+                        <span>⌕</span>
+                        <strong>No matching symptoms found</strong>
+
+                        <p>Try another search term.</p>
+
+                    </div>
+
+
+                    <!-- ACTION -->
+                    <div class="mp-checker-footer">
+
+                        <p>
+                            <span>ⓘ</span>
+                            You can change your selection before analyzing.
+                        </p>
+
+                        <button type="submit"
+                                class="mp-analyze-btn"
+                                id="predictButton">
+
+                            Analyze Symptoms
+                            <span>→</span>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- RESULT -->
+            <div id="result" class="mp-result" style="display:none;"></div>
+
+
+            <div class="mp-medical-disclaimer">
+
+                <span>ⓘ</span>
+
+                <p>
+                    <strong>Important:</strong>
+                    MediPredict is an educational machine-learning
+                    prototype. Its predictions are not medical diagnoses
+                    and must not be used for treatment decisions.
+                    Consult a qualified healthcare professional for
+                    medical advice.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ABOUT -->
+        <section class="mp-about" id="about">
+
+            <div class="mp-about-content">
+
+                <span class="mp-section-tag">
+                    ABOUT THE PROJECT
+                </span>
+
+                <h2>
+                    Technology with a
+                    <span>healthcare perspective.</span>
+                </h2>
+
+                <p>
+                    MediPredict demonstrates how Python,
+                    machine learning and web technologies can
+                    work together to explore symptom patterns.
+                    It combines a Flask application, a trained
+                    classification model and an SQLite database.
+                </p>
+
+            </div>
+
+
+            <div class="mp-tech-grid">
+
+                <div class="mp-tech-card">
+                    <span>01</span>
+                    <strong>Python</strong>
+                    <p>Backend and machine learning</p>
+                </div>
+
+                <div class="mp-tech-card">
+                    <span>02</span>
+                    <strong>Scikit-learn</strong>
+                    <p>Disease classification model</p>
+                </div>
+
+                <div class="mp-tech-card">
+                    <span>03</span>
+                    <strong>Flask</strong>
+                    <p>Web application framework</p>
+                </div>
+
+                <div class="mp-tech-card">
+                    <span>04</span>
+                    <strong>SQLite</strong>
+                    <p>User and prediction storage</p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="mp-footer">
+
+        <a href="#home" class="mp-brand">
+            <span class="mp-brand-icon">✚</span>
+            <span>Medi<span>Predict</span></span>
+        </a>
+
+        <p>
+            AI-Based Disease Prediction · Educational Project
+        </p>
+
+        <a href="#home">Back to top ↑</a>
+
+    </footer>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

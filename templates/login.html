@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPredict | Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="mp-auth-page">
+    <main class="mp-auth-layout">
+        <section class="mp-auth-visual">
+            <a class="mp-brand mp-auth-brand" href="{{ url_for('home') }}">
+                <span class="mp-brand-icon">✚</span><span>Medi<span>Predict</span></span>
+            </a>
+            <div class="mp-auth-message">
+                <span class="mp-auth-overline">WELCOME TO MEDIPREDICT</span>
+                <h1>Understand patterns.<br><span>Explore insights.</span></h1>
+                <p>A student-built machine learning project that demonstrates symptom-based disease classification for educational purposes.</p>
+                <div class="mp-auth-feature"><span>✓</span> Machine learning demonstration</div>
+                <div class="mp-auth-feature"><span>✓</span> Personal prediction history</div>
+                <div class="mp-auth-feature"><span>✓</span> Simple analytics dashboard</div>
+            </div>
+            <p class="mp-auth-visual-footer">Educational prototype only · Not a medical diagnosis</p>
+        </section>
+
+        <section class="mp-auth-form-side">
+            <div class="mp-auth-card">
+                <div class="mp-auth-mobile-brand">
+                    <span class="mp-brand-icon">✚</span> Medi<span>Predict</span>
+                </div>
+                <p class="mp-section-kicker">YOUR ACCOUNT</p>
+                <h2>Welcome back</h2>
+                <p class="mp-auth-subtitle">Sign in to continue to your dashboard.</p>
+
+                {% with messages = get_flashed_messages() %}
+                    {% for message in messages %}
+                        <div class="mp-flash-message">{{ message }}</div>
+                    {% endfor %}
+                {% endwith %}
+
+                <form method="POST" class="mp-auth-form">
+                    <label for="email">Email address</label>
+                    <input id="email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+
+                    <button type="submit" class="mp-auth-submit">Login to account <span>→</span></button>
+                </form>
+
+                <p class="mp-auth-switch">New to MediPredict? <a href="{{ url_for('register') }}">Create an account</a></p>
+                <a class="mp-back-home" href="{{ url_for('home') }}">← Back to home</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

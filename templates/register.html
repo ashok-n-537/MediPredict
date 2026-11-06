@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPredict | Create Account</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="mp-auth-page">
+    <main class="mp-auth-layout">
+        <section class="mp-auth-visual">
+            <a class="mp-brand mp-auth-brand" href="{{ url_for('home') }}">
+                <span class="mp-brand-icon">✚</span><span>Medi<span>Predict</span></span>
+            </a>
+            <div class="mp-auth-message">
+                <span class="mp-auth-overline">GET STARTED</span>
+                <h1>Your activity.<br><span>All in one place.</span></h1>
+                <p>Create an account to save your educational prediction activity and review it whenever you return.</p>
+                <div class="mp-auth-feature"><span>✓</span> Save prediction records</div>
+                <div class="mp-auth-feature"><span>✓</span> Review previous activity</div>
+                <div class="mp-auth-feature"><span>✓</span> View your dashboard</div>
+            </div>
+            <p class="mp-auth-visual-footer">Educational prototype only · Not a medical diagnosis</p>
+        </section>
+
+        <section class="mp-auth-form-side">
+            <div class="mp-auth-card">
+                <div class="mp-auth-mobile-brand">
+                    <span class="mp-brand-icon">✚</span> Medi<span>Predict</span>
+                </div>
+                <p class="mp-section-kicker">CREATE YOUR ACCOUNT</p>
+                <h2>Get started</h2>
+                <p class="mp-auth-subtitle">Enter your details to create your MediPredict account.</p>
+
+                {% with messages = get_flashed_messages() %}
+                    {% for message in messages %}
+                        <div class="mp-flash-message">{{ message }}</div>
+                    {% endfor %}
+                {% endwith %}
+
+                <form method="POST" class="mp-auth-form">
+                    <label for="name">Full name</label>
+                    <input id="name" type="text" name="name" placeholder="Your full name" autocomplete="name" required>
+
+                    <label for="email">Email address</label>
+                    <input id="email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" placeholder="At least 8 characters" minlength="8" autocomplete="new-password" required>
+
+                    <button type="submit" class="mp-auth-submit">Create account <span>→</span></button>
+                </form>
+
+                <p class="mp-auth-switch">Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+                <a class="mp-back-home" href="{{ url_for('home') }}">← Back to home</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

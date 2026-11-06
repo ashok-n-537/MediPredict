@@ -1,0 +1,9 @@
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.vscode/
+.pytest_cache/
+dataset/medipredict_100_diseases.csv
+model/disease_model.pkl

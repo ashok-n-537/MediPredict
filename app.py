@@ -53,8 +53,23 @@ if not MODEL_PATH.exists():
     print("Model downloaded successfully!")
 
 # Load the trained model
+import hashlib
+
+print("MODEL FILE SIZE:", MODEL_PATH.stat().st_size)
+
+with open(MODEL_PATH, "rb") as f:
+    print("MODEL FIRST BYTES:", f.read(20))
+
+h = hashlib.sha256()
+
+with open(MODEL_PATH, "rb") as f:
+    for chunk in iter(lambda: f.read(1024 * 1024), b""):
+        h.update(chunk)
+
+print("MODEL SHA256:", h.hexdigest())
 
 saved_data = joblib.load(MODEL_PATH)
+
 
 model = saved_data["model"]
 features = saved_data["features"]

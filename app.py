@@ -7,6 +7,10 @@ from flask import (
 import joblib
 import pandas as pd
 import json
+import os
+import joblib
+import requests
+from pathlib import Path
 
 from werkzeug.security import (
     generate_password_hash,
@@ -20,19 +24,43 @@ app = Flask(__name__)
 app.secret_key = "medipredict-development-secret"
 
 
-# =====================================
-# LOAD TRAINED MACHINE LEARNING MODEL
-# =====================================
+# Download the trained model if it is not available locally
 
-saved_data = joblib.load("model/disease_model.pkl")
+MODEL_PATH = Path("model/disease_model.pkl")
+
+if not MODEL_PATH.exists():
+    MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    MODEL_URL = os.environ.get("MODEL_URL")
+
+    if not MODEL_URL:
+        raise RuntimeError("MODEL_URL is not configured in Render")
+
+    print("Downloading MediPredict model...")
+
+    response = requests.get(
+        MODEL_URL,
+        stream=True,
+        timeout=(30, 600)
+    )
+    response.raise_for_status()
+
+    with open(MODEL_PATH, "wb") as file:
+        for chunk in response.iter_content(chunk_size=1024 * 1024):
+            if chunk:
+                file.write(chunk)
+
+    print("Model downloaded successfully!")
+
+# Load the trained model
+
+saved_data = joblib.load(MODEL_PATH)
 
 model = saved_data["model"]
 features = saved_data["features"]
 
+print("MediPredict model loaded successfully!")
 
-# =====================================
-# HOME PAGE
-# =====================================
 
 @app.route('/')
 def home():

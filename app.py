@@ -25,16 +25,16 @@ app.secret_key = "medipredict-development-secret"
 
 
 # Download the trained model if it is not available locally
-
 MODEL_PATH = Path("model/disease_model.pkl")
 
-if not MODEL_PATH.exists():
+if not MODEL_PATH.exists() or MODEL_PATH.stat().st_size < 100_000_000:
+
     MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     MODEL_URL = os.environ.get("MODEL_URL")
 
     if not MODEL_URL:
-        raise RuntimeError("MODEL_URL is not configured in Render")
+        raise RuntimeError("MODEL_URL is not configured")
 
     print("Downloading MediPredict model...")
 
@@ -43,15 +43,30 @@ if not MODEL_PATH.exists():
         stream=True,
         timeout=(30, 600)
     )
+
     response.raise_for_status()
+
+    content_type = response.headers.get("Content-Type", "")
+
+    if "text/html" in content_type:
+        raise RuntimeError("Hugging Face returned HTML instead of the model")
 
     with open(MODEL_PATH, "wb") as file:
         for chunk in response.iter_content(chunk_size=1024 * 1024):
             if chunk:
                 file.write(chunk)
 
+    if MODEL_PATH.stat().st_size < 100_000_000:
+        raise RuntimeError("Downloaded model file is incomplete")
+
     print("Model downloaded successfully!")
 
+saved_data = joblib.load(MODEL_PATH)
+
+model = saved_data["model"]
+features = saved_data["features"]
+
+print("MediPredict model loaded successfully!")
 # Load the trained model
 import hashlib
 
